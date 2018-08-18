@@ -41,7 +41,6 @@ const cards = [
     }
 ];
 
-let clickingAllowed = true;
 let matchingList = [];
 let movesCounter = 0;
 const game = document.getElementById("game");
@@ -83,7 +82,7 @@ if(matchingList.length < 2 && matchingList[0]!=card){
     matchingList.push(card);
 }
 if(matchingList.length == 2){
-    document.getElementById("score").innerHTML = ++movesCounter;
+    checkIfGameOver() ? (document.getElementById("par").innerHTML = "Congratulations!") : document.getElementById("score").innerHTML = ++movesCounter;
     if(matchingList[0].dataset.key == matchingList[1].dataset.key)
         {
         matchingList[0].style.visibility = "hidden";
@@ -92,9 +91,9 @@ if(matchingList.length == 2){
 
     matchingList = [];
 }
+
 };
 removeAllCards=()=>{
-
     document.getElementById("par").innerHTML = "Train your brain.";
     document.getElementById("start").innerText = "RESTART";
      matchingList = [];
@@ -112,5 +111,11 @@ for (var i of game.children) {
     i.style.background = "aquamarine";
 }
 }
-
 };
+checkIfGameOver=()=>{
+    for(var cards of game.children){
+        if(cards.style.visibility != "hidden")
+            return false;
+    }
+    return true;
+}
