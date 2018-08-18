@@ -1,11 +1,11 @@
 const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-const duplicatedNumbers = numbers.concat(numbers);
 let clickingAllowed = true;
-let matchingList =[];
-
+let matchingList = [];
+let movesCounter = 0;
 
 createTiles=()=>{
-    hello.remove();
+    removeAllCards();
+    let duplicatedNumbers = duplicateCards(numbers);
     let shuffled = shuffleTable(duplicatedNumbers);
     for (let i = 0; i<shuffled.length;i++){
     var card = document.createElement("div");
@@ -19,12 +19,16 @@ createTiles=()=>{
     document.getElementById("game").appendChild(card);
     }
 }
+duplicateCards=(cards)=>{
+    return cards.concat(cards);
+}
 
-shuffleTable=duplicatedNumbers=>{
+shuffleTable = duplicatedNumbers=>{
 return duplicatedNumbers.sort(() => Math.random() - 0.5);
 }
  
-cardClicked=card=>{
+cardClicked = card=>{
+document.getElementById("score").innerHTML = ++movesCounter;
 console.log(card.dataset.key);
 if(matchingList.length < 2 && matchingList[0]!=card){
     matchingList.push(card);
@@ -39,4 +43,11 @@ if(matchingList.length == 2){
 
     matchingList = [];
 }
+}
+
+removeAllCards=()=>{
+    let game = document.getElementById("game");
+    while (game.firstChild) {
+      game.removeChild(game.firstChild);
+    }
 }
