@@ -1,0 +1,14 @@
+#game{
+    display: grid;
+    grid-template-columns: repeat(5, 150px);
+    grid-template-rows: repeat(4, 150px);
+    grid-gap: 10px;
+    justify-content: center;
+    align-items: stretch;
+}
+
+.cont{
+text-align: center;
+text-justify: center;
+border: dotted 1px;
+}
