@@ -44,26 +44,38 @@ const cards = [
 let matchingList = [];
 let movesCounter = 0;
 const game = document.getElementById("game");
+let timerTimeout;
 
-createTiles = () => {
+startGame = () => {
+  initializeGame();
+  let duplicatedNumbers = duplicateCards(cards);
+  let shuffledArray = shuffleTable(duplicatedNumbers);
+  createCardsStructure(shuffledArray);
+};
+
+initializeGame = () => {
+  startTimer();
   showGrid();
   removeAllCards();
-  let duplicatedNumbers = duplicateCards(cards);
-  let shuffled = shuffleTable(duplicatedNumbers);
-  for (let i = 0; i < shuffled.length; i++) {
+};
+
+createCardsStructure = shuffledArray => {
+  for (let i = 0; i < shuffledArray.length; i++) {
     let card = document.createElement("div");
-    card.className = "cont";
-    card.dataset.id = i;
-    card.id = `card${i}`;
-    card.dataset.clicked = "false";
-    card.dataset.bg = shuffled[i].src;
-    card.dataset.key = shuffled[i].id;
+    addProperties(card,i, shuffledArray);
     game.appendChild(card);
     prepareBackAndFront(card);
     $(`#${card.id}`).flip({ trigger: "manual" });
-
     card.addEventListener("click", cardClicked.bind(this, card));
   }
+};
+
+addProperties = (card, id, shuffled) => {
+  card.className = "card";
+  card.id = `card${id}`;
+  card.dataset.clicked = "false";
+  card.dataset.bg = shuffled[id].src;
+  card.dataset.key = shuffled[id].id;
 };
 
 duplicateCards = cards => {
@@ -90,9 +102,11 @@ showGrid = () => {
 
 cardClicked = card => {
   $(`#${card.id}`).flip(true);
-  if (matchingList.length == 0) hideOthersContent(matchingList);
+  if (matchingList.length == 0)
+    hideOthersContent(matchingList);
 
   card.dataset.clicked = "true";
+
   if (matchingList.length < 2 && matchingList[0] != card)
     matchingList.push(card);
 
@@ -102,15 +116,14 @@ cardClicked = card => {
       matchingList[1].style.visibility = "hidden";
     }
     matchingList = [];
-    checkIfGameOver() ? (document.getElementById("moves").innerHTML = "Congratulations! Total moves:") : (document.getElementById("score").innerHTML = ++movesCounter);
+    checkIfGameOver() ? finishGame() : (document.getElementById("score").innerHTML = `Total moves: ${++movesCounter}`);
   }
 };
-
 
 removeAllCards = () => {
   document.getElementById("par").innerHTML = "Train your brain.";
   document.getElementById("start").innerText = "RESTART";
-  document.getElementById("score").innerHTML = "0";
+  document.getElementById("score").innerHTML = "Total moves: 0";
   matchingList = [];
   movesCounter = 0;
   while (game.firstChild) {
@@ -119,10 +132,9 @@ removeAllCards = () => {
 };
 
 hideOthersContent = matchingList => {
-  for (var element of game.children) {
+  for (let element of game.children) {
     if (element.dataset.clicked == "true") {
       $(`#${element.id}`).flip(false);
-      console.log(element.id);
       element.dataset.clicked = "false";
     }
   }
@@ -133,4 +145,47 @@ checkIfGameOver = () => {
     if (cards.style.visibility != "hidden") return false;
   }
   return true;
+};
+
+startTimer = () => {
+  let timer = document.getElementById("timer");
+  clearTimer(timer);
+  triggerTimer(timer);
+};
+
+triggerTimer = timer => {
+  timerTimeout = setTimeout(nextSecond.bind(this, timer), 1000);
+};
+
+nextSecond = timer => {
+  seconds++;
+  if (seconds >= 60) {
+    seconds = 0;
+    minutes++;
+  }
+
+  timer.textContent = `${
+    minutes ? (minutes > 9 ? minutes : "0" + minutes) : "00"
+  }:${seconds > 9 ? seconds : "0" + seconds}`;
+
+  triggerTimer(timer);
+};
+
+clearTimer = timer => {
+  clearTimeout(timerTimeout);
+  timer.innerHTML = "00:00";
+  seconds = 0;
+  minutes = 0;
+};
+
+stopTimer = () => {
+  clearTimeout(timerTimeout);
+};
+
+finishGame = () => {
+  document.getElementById("moves").innerHTML = "Congratulations! Total moves:";
+  document.getElementById("timer").innerHTML = `Your time: ${
+    document.getElementById("timer").innerHTML
+  }`;
+  stopTimer();
 };
