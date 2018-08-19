@@ -62,7 +62,7 @@ initializeGame = () => {
 createCardsStructure = shuffledArray => {
   for (let i = 0; i < shuffledArray.length; i++) {
     let card = document.createElement("div");
-    addProperties(card,i, shuffledArray);
+    addProperties(card, i, shuffledArray);
     game.appendChild(card);
     prepareBackAndFront(card);
     $(`#${card.id}`).flip({ trigger: "manual" });
@@ -102,8 +102,7 @@ showGrid = () => {
 
 cardClicked = card => {
   $(`#${card.id}`).flip(true);
-  if (matchingList.length == 0)
-    hideOthersContent(matchingList);
+  if (matchingList.length == 0) hideOthersContent(matchingList);
 
   card.dataset.clicked = "true";
 
@@ -116,12 +115,16 @@ cardClicked = card => {
       matchingList[1].style.visibility = "hidden";
     }
     matchingList = [];
-    checkIfGameOver() ? finishGame() : (document.getElementById("score").innerHTML = `Total moves: ${++movesCounter}`);
+    checkIfGameOver()
+      ? finishGame()
+      : (document.getElementById(
+          "score"
+        ).innerHTML = `Total moves: ${++movesCounter}`);
   }
 };
 
 removeAllCards = () => {
-  document.getElementById("par").innerHTML = "Train your brain.";
+  document.getElementById("par").innerHTML = "Train your brain. Good luck.";
   document.getElementById("start").innerText = "RESTART";
   document.getElementById("score").innerHTML = "Total moves: 0";
   matchingList = [];
