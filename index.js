@@ -102,8 +102,8 @@ showGrid = () => {
 };
 
 cardClicked = card => {
-  
-  if (matchingList.length == 0) hideOthersContent(matchingList);
+  if (matchingList.length == 0) 
+    hideOthersContent(matchingList);
 
   card.dataset.clicked = "true";
 
@@ -188,7 +188,7 @@ stopTimer = () => {
 };
 
 finishGame = () => {
-  document.getElementById("moves").innerHTML = "Congratulations! Total moves:";
+  document.getElementById("score").innerHTML = "Congratulations! " + document.getElementById("score").innerHTML;
   document.getElementById("timer").innerHTML = `Your time: ${
     document.getElementById("timer").innerHTML
   }`;
