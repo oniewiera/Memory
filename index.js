@@ -87,7 +87,8 @@ prepareBackAndFront = card => {
   front.className = "front";
   let back = document.createElement("div");
   back.className = "back";
-  back.style.background = `url(${card.dataset.bg})`;
+  back.style.background = `url(${card.dataset.bg}) no-repeat center center`;
+  back.style.backgroundSize = 'cover';
   card.appendChild(front);
   card.appendChild(back);
 };
@@ -101,7 +102,7 @@ showGrid = () => {
 };
 
 cardClicked = card => {
-  $(`#${card.id}`).flip(true);
+  
   if (matchingList.length == 0) hideOthersContent(matchingList);
 
   card.dataset.clicked = "true";
@@ -110,17 +111,18 @@ cardClicked = card => {
     matchingList.push(card);
 
   if (matchingList.length == 2) {
+    if (card !== matchingList[0].dataset.key && card !== matchingList[0].dataset.key)
+      $(`#${card.id}`).flip(true);
+
     if (matchingList[0].dataset.key == matchingList[1].dataset.key) {
       matchingList[0].style.visibility = "hidden";
       matchingList[1].style.visibility = "hidden";
     }
     matchingList = [];
-    checkIfGameOver()
-      ? finishGame()
-      : (document.getElementById(
-          "score"
-        ).innerHTML = `Total moves: ${++movesCounter}`);
+    checkIfGameOver() ? finishGame() : (document.getElementById("score").innerHTML = `Total moves: ${++movesCounter}`);
   }
+  else
+    $(`#${card.id}`).flip(true);
 };
 
 removeAllCards = () => {
